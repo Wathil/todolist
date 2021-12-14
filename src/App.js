@@ -4,12 +4,12 @@ import { Ligne } from "./Ligne";
 
 function App() {
   const [refresh, setRefresh] = useState(false);
-  const [search, setSearch] = useState({pattern:"", flags:"gi"});
+  const search = useState({pattern:"", flags:"gi"})[0];
   const [entry, setEntry] = useState("");
-  const [todolist, setTodolist] = useState([
+  const todolist = useState([
     { name: "faire les courses", done: false },
     { name: "faires exercices react", done: true },
-  ]);
+  ])[0];
 
   const refreshF=()=>{
     setRefresh(!refresh);
@@ -32,7 +32,7 @@ function App() {
   }
 
   const myMap=(item,index)=>{
-    return <Ligne index={index} item={item} bSupprimer={bSupprimer} toggleClass={toggleClass}/>
+    return <Ligne key={index} index={index} item={item} bSupprimer={bSupprimer} toggleClass={toggleClass}/>
   }
 
   return (
