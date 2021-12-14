@@ -1,4 +1,21 @@
+.App {
+  margin: 0 auto;
+}
+
 .item {
   background-color: bisque;
   margin: 10px;
+  cursor: pointer;
+}
+
+.itemLineThrough {
+  background-color: bisque;
+  margin: 10px;
+  text-decoration: line-through;
+  cursor: pointer;
+}
+
+.mybutton {
+  background: transparent;
+  border: none !important;
 }

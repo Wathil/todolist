@@ -3,55 +3,47 @@ import "./App.css";
 import { useState } from "react";
 
 function App() {
+  const [refresh, setRefresh] = useState(false);
+  const [search, setSearch] = useState("");
   const [entry, setEntry] = useState("");
   const [todolist, setTodolist] = useState([
     { name: "faire les courses", done: false },
-    { name: "faires exercices react", done: false },
+    { name: "faires exercices react", done: true },
   ]);
 
-  const bSupprimer = (item) => {
-      const todolistCopy = [...todolist];
-      let i=0;
-      for(let e of todolistCopy) {
-        if (e===item) {
-          console.log("trouvé="+e.name);
-          break;
-        }
-        i++;
-      }
-      todolistCopy.splice(i, 1);
-      setTodolist(todolistCopy);
-    }
+  const refreshF=()=>{
+    setRefresh(!refresh);
+  }
+
+  const bSupprimer=(e,index)=>{
+    e.stopPropagation();
+    todolist.splice(index,1);
+    refreshF();
+  }
+  
+  const toggleClass=(item)=>{
+    item.done=!item.done;
+    refreshF();
+  }
 
   return (
     <div className="App">
-      <span>TODOLIST TITRE</span>
-      {todolist.map((item) => {
-        return <div className="item"><button
-        onClick={() => bSupprimer(item)}
-        >Supprimer</button> {item.name}</div>;
-      })
-      }
+      <span>TODOLIST</span>
+      <hr></hr>
+      <span>SEARCH </span><input value={search} type="text" placeholder="rechercher" onChange={(e)=>{setSearch(e.target.value)}}></input>
+      {todolist.map((item,index)=>{
+        if (search.length!==0) {
+          let pattern=new RegExp(search,"gi");
+          if (item.name.match(pattern)) {
+            return (<div key={index} className={item.done?"itemLineThrough":"item"} onClick={()=>toggleClass(item)}>
+              <button className="mybutton" onClick={(e)=>bSupprimer(e,index)}>❌</button> {item.name}</div>);
+          }
+        } else return (<div key={index} className={item.done?"itemLineThrough":"item"} onClick={()=>toggleClass(item)}>
+          <button className="mybutton" onClick={(e)=>{bSupprimer(e,index);}}>❌</button> {item.name}</div>);
+      })}
 
-      <input
-        value={entry}
-        type="text"
-        placeholder="entrez un nouvel item"
-        onChange={(event) => {
-          setEntry(event.target.value);
-        }}
-      />
-      <button
-        onClick={() => {
-          // faire une copie du tableau state
-          const todolistCopy = [...todolist];
-          todolistCopy.push({ name: entry, done: false });
-          setTodolist(todolistCopy);
-          setEntry("");
-        }}
-      >
-        Ajouter le nouvel item
-      </button>
+      <input value={entry} type="text" placeholder="entrez un nouvel item" onChange={(event)=>{setEntry(event.target.value);}}/>
+      <button onClick={()=>{todolist.push({ name: entry, done: false });setEntry("");}}>Ajouter le nouvel item</button>
     </div>
   );
 }
